@@ -1,19 +1,54 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import ReactDOM from 'react-dom/client'
+import { Provider } from 'react-redux'
+import { StyleSheetManager, ThemeProvider } from 'styled-components'
+import {
+  Card,
+  Content,
+  Grid,
+  IncorrectAttempts,
+  NewButton,
+  Numbers,
+  Score,
+  Title,
+} from 'components'
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+import { configStore, register } from 'core'
+import { GlobalStyles, theme } from 'styles'
+import { PersistGate } from 'redux-persist/integration/react'
+import isPropValid from '@emotion/is-prop-valid'
+
+const { persistor, store } = configStore()
+
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+  <>
+    <StyleSheetManager
+      enableVendorPrefixes
+      shouldForwardProp={(propName, elementToBeRendered) => {
+        return typeof elementToBeRendered === 'string'
+          ? isPropValid(propName)
+          : true
+      }}
+    >
+      <ThemeProvider theme={theme}>
+        <GlobalStyles />
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <Content data-cy="content">
+              <Title data-cy="title">Sudoku</Title>
+              <Card data-cy="card">
+                <NewButton />
+                <Score />
+                <IncorrectAttempts />
+                <Grid />
+                <Numbers />
+              </Card>
+            </Content>
+          </PersistGate>
+        </Provider>
+      </ThemeProvider>
+    </StyleSheetManager>
+  </>
+)
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+register()

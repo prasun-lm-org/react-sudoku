@@ -1,0 +1,6 @@
+export { default as Grid } from './grid'
+export { default as IncorrectAttempts } from './incorrect-attempts'
+export { default as NewButton } from './new-button'
+export { default as Numbers } from './numbers'
+export { default as Score } from './score'
+export * from './styles'
